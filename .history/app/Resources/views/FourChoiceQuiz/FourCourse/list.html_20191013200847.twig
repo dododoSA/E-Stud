@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>4択クイズ</h1>
+    {% for course in courses %}
+        {{ course.name }}<br />
+        <a href="{{ path('course_list') }}">詳細</a>
+        <br />
+        <br />
+    {% endfor %}
+{% endblock %}

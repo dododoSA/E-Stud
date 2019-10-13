@@ -1,0 +1,8 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>4択クイズ</h1>
+    {% for course in courses %}
+        <a href="{{ path('course_list') }}">コース選択画面へ</a>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>質問一覧</h1>
+    {% for quiz in quizzes %}
+        {{ quiz.question }}
+    {% endfor %}
+    
+{% endblock %}

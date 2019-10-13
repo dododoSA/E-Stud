@@ -27,7 +27,7 @@ class FourCourseController extends Controller {
      * @Route("/genre/four/{id}/show", name="four_course_show")
      */
     public function showAction($id) {
-        $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($id);
+        $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByCourseId($id);
 
         return $this->render("FourChoiceQuiz/FourCourse/show.html.twig", [
             'quizzes' => $quizzes,

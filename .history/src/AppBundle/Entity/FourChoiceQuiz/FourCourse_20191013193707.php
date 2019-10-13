@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="courses")
+ * @ORM\Table(name="four_courses")
  */
 
 class FourCourse {
@@ -23,6 +23,12 @@ class FourCourse {
      * @Assert\NotNull
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="")
+     * @Assert\NotNull
+     */
+    private $genre_id;
 
     /**
      * Get id

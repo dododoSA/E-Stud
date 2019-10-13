@@ -14,6 +14,7 @@ class FourQuiz {
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Assert\NotNull
      */
     private $id;
 
@@ -21,7 +22,7 @@ class FourQuiz {
      * @ORM\Column(type="integer")
      * @Assert\NotNull
      */
-    private $quizNum;
+    private $quiz_num;
 
     /**
      * @ORM\Column(type="text")
@@ -33,31 +34,31 @@ class FourQuiz {
      * @ORM\Column(type="text")
      * @Assert\NotNull
      */
-    private $correctAns;
+    private $correct_ans;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotNull
      */
-    private $wrongAns1;
+    private $wrong_ans1;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotNull
      */
-    private $wrongAns2;
+    private $wrong_ans2;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotNull
      */
-    private $wrongAns3;
+    private $wrong_ans3;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotNull
      */
-    private $fourCourseId;
+    private $four_course_id;
 
     /**
      * Get id
@@ -78,7 +79,7 @@ class FourQuiz {
      */
     public function setQuizNum($quizNum)
     {
-        $this->quizNum = $quizNum;
+        $this->quiz_num = $quizNum;
 
         return $this;
     }
@@ -90,7 +91,7 @@ class FourQuiz {
      */
     public function getQuizNum()
     {
-        return $this->quizNum;
+        return $this->quiz_num;
     }
 
     /**
@@ -126,7 +127,7 @@ class FourQuiz {
      */
     public function setCorrectAns($correctAns)
     {
-        $this->correctAns = $correctAns;
+        $this->correct_ans = $correctAns;
 
         return $this;
     }
@@ -138,7 +139,7 @@ class FourQuiz {
      */
     public function getCorrectAns()
     {
-        return $this->correctAns;
+        return $this->correct_ans;
     }
 
     /**
@@ -150,7 +151,7 @@ class FourQuiz {
      */
     public function setWrongAns1($wrongAns1)
     {
-        $this->wrongAns1 = $wrongAns1;
+        $this->wrong_ans1 = $wrongAns1;
 
         return $this;
     }
@@ -162,7 +163,7 @@ class FourQuiz {
      */
     public function getWrongAns1()
     {
-        return $this->wrongAns1;
+        return $this->wrong_ans1;
     }
 
     /**
@@ -174,7 +175,7 @@ class FourQuiz {
      */
     public function setWrongAns2($wrongAns2)
     {
-        $this->wrongAns2 = $wrongAns2;
+        $this->wrong_ans2 = $wrongAns2;
 
         return $this;
     }
@@ -186,7 +187,7 @@ class FourQuiz {
      */
     public function getWrongAns2()
     {
-        return $this->wrongAns2;
+        return $this->wrong_ans2;
     }
 
     /**
@@ -198,7 +199,7 @@ class FourQuiz {
      */
     public function setWrongAns3($wrongAns3)
     {
-        $this->wrongAns3 = $wrongAns3;
+        $this->wrong_ans3 = $wrongAns3;
 
         return $this;
     }
@@ -210,7 +211,7 @@ class FourQuiz {
      */
     public function getWrongAns3()
     {
-        return $this->wrongAns3;
+        return $this->wrong_ans3;
     }
 
     /**
@@ -222,7 +223,7 @@ class FourQuiz {
      */
     public function setFourCourseId($fourCourseId)
     {
-        $this->fourCourseId = $fourCourseId;
+        $this->four_course_id = $fourCourseId;
 
         return $this;
     }
@@ -234,6 +235,6 @@ class FourQuiz {
      */
     public function getFourCourseId()
     {
-        return $this->fourCourseId;
+        return $this->four_course_id;
     }
 }

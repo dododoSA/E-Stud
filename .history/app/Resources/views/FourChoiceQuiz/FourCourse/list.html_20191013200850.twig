@@ -5,9 +5,8 @@
     {% for course in courses %}
         {{ course.name }}
         <br />
-        <a href="{{ path('four_course_show', {'id': course.id}) }}">詳細</a>
+        <a href="{{ path('course_list') }}">詳細</a>
         <br />
         <br />
     {% endfor %}
-    <a href="{{ path('four_course_new') }}">追加</a>
 {% endblock %}

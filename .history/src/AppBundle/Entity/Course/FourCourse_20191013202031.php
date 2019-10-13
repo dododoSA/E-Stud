@@ -25,6 +25,12 @@ class FourCourse {
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=30)
+     * @Assert\NotNull
+     */
+    private $genre_name;
+
+    /**
      * Get id
      *
      * @return integer
@@ -56,5 +62,29 @@ class FourCourse {
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set genreName
+     *
+     * @param string $genreName
+     *
+     * @return FourCourse
+     */
+    public function setGenreName($genreName)
+    {
+        $this->genre_name = $genreName;
+
+        return $this;
+    }
+
+    /**
+     * Get genreName
+     *
+     * @return string
+     */
+    public function getGenreName()
+    {
+        return $this->genre_name;
     }
 }

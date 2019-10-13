@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <a href="{{ path('four_course_list') }}"><<問一覧へ</a>
+    <h1>質問一覧</h1>
+    {% for quiz in quizzes %}
+        {{ quiz.question }}
+    {% endfor %}
+    <a href="#">追加</a>
+{% endblock %}

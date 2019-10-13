@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="courses")
+ * @ORM\Table(name="four_courses")
  */
 
 class FourCourse {
@@ -23,6 +23,12 @@ class FourCourse {
      * @Assert\NotNull
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotNull
+     */
+    private $genre_id;
 
     /**
      * Get id
@@ -56,5 +62,29 @@ class FourCourse {
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set genreId
+     *
+     * @param integer $genreId
+     *
+     * @return FourCourse
+     */
+    public function setGenreId($genreId)
+    {
+        $this->genre_id = $genreId;
+
+        return $this;
+    }
+
+    /**
+     * Get genreId
+     *
+     * @return integer
+     */
+    public function getGenreId()
+    {
+        return $this->genre_id;
     }
 }

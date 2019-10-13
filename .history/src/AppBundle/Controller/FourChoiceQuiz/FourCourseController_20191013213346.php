@@ -15,7 +15,7 @@ class FourCourseController extends Controller {
      * @Route("/genre/four", name="four_course_list")
      */
     public function listAction() {
-        $courses = $this->getDoctrine()->getRepository(FourCourse::class)->findAll();
+        $courses = $this->getRepository(FourCourse::class)->findAll();
 
 
         return $this->render("FourChoiceQuiz/FourCourse/list.html.twig", [
@@ -24,10 +24,10 @@ class FourCourseController extends Controller {
     }
 
     /**
-     * @Route("/genre/four/{id}/show", name="four_course_show")
+     * @Route("/genre/four/{id}/show, name="four_course_show")
      */
     public function showAction($id) {
-        $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($id);
+        $quizzes = $this->getRepository(FourCourse::class)->findByCourseId($id);
 
         return $this->render("FourChoiceQuiz/FourCourse/show.html.twig", [
             'quizzes' => $quizzes,
@@ -37,28 +37,15 @@ class FourCourseController extends Controller {
     /**
      * @Route("/genre/four/new", name="four_course_new")
      */
-    public function newAction(Request $request) {
+    public function newAction() {
         $course = new FourCourse();
 
         $form = $this->createFormBuilder($course)
-            ->add('name', TextType::class, ['attr' => ['placeholder' => 'New Problem Name']])
-            ->add('save', SubmitType::class)
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $course = $form->getData();
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($course);
-            $em->flush();
-
-            return $this->redirectToRoute('four_course_list');
-        }
+            ->add('name', TextType::class, ['placeholder' => 'New Problem Name'])
+            ->add('save', )
 
         return $this->render("FourChoiceQuiz/FourCourse/new.html.twig", [
-            'form' => $form->createView(),
+
         ]);
     }
 }
