@@ -5,7 +5,7 @@ namespace AppBundle\Controller\FourChoiceQuiz;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Form\FourChoiceQuiz\FourQuizType;
+use AppBundle\Form\FourChoiceQuiz\FourChoiceQuizType;
 use AppBundle\Entity\FourChoiceQuiz\FourQuiz;
 
 class FourQuizController extends Controller {
@@ -33,10 +33,10 @@ class FourQuizController extends Controller {
             $em->persist($fcq);
             $em->flush();
 
-            return $this->redirectToRoute('four_course_show', ['id' => $course_id]);
+            return $this->redirectToRoute('four_course_show');
         }
 
-        return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
+        return $this->render('FourChoiceQuiz/FourQuiz/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }

@@ -5,7 +5,6 @@
     <h1>質問一覧</h1>
     {% for quiz in quizzes %}
         {{ quiz.question }}
-        <br />
     {% endfor %}
-    <a href="{{ path('four_quiz_new', {'course_id': four_course_id}) }}">追加</a>
+    <a href="{{ path('four_quiz_new') }}">追加</a>
 {% endblock %}

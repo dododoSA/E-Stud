@@ -21,7 +21,7 @@ class FourQuizController extends Controller {
      */
     public function newAction(Request $request, $course_id) {  //質問の新規作成
         $fcq = new FourQuiz();
-        $form = $this->createForm(FourQuizType::class, $fcq);
+        $form = $this->createForm(FourQuiz::class, $fcq);
 
         $form->handleRequest($request);
 
@@ -33,10 +33,10 @@ class FourQuizController extends Controller {
             $em->persist($fcq);
             $em->flush();
 
-            return $this->redirectToRoute('four_course_show', ['id' => $course_id]);
+            return $this->redirectToRoute('four_course_show');
         }
 
-        return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
+        return $this->render('FourChoiceQuiz/FourQuiz/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }

@@ -33,10 +33,10 @@ class FourQuizController extends Controller {
             $em->persist($fcq);
             $em->flush();
 
-            return $this->redirectToRoute('four_course_show', ['id' => $course_id]);
+            return $this->redirectToRoute('four_course_show');
         }
 
-        return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
+        return $this->render('FourChoiceQuiz/FourQuiz/anew.html.twig', [
             'form' => $form->createView(),
         ]);
     }

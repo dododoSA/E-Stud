@@ -31,7 +31,7 @@ class FourCourseController extends Controller {
 
         return $this->render("FourChoiceQuiz/FourCourse/show.html.twig", [
             'quizzes' => $quizzes,
-            'four_course_id' => $id
+            'course_id' => $id
         ]);
     }
 

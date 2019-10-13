@@ -21,23 +21,23 @@ class FourQuizController extends Controller {
      */
     public function newAction(Request $request, $course_id) {  //質問の新規作成
         $fcq = new FourQuiz();
-        $form = $this->createForm(FourQuizType::class, $fcq);
+        // $form = $this->createForm(FourQuizType::class, $fcq);
 
-        $form->handleRequest($request);
+        // $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $fcq = $form->getData();
-            $fcq->setFourCourseId($course_id);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $fcq = $form->getData();
+        //     $fcq->setFourCourseId($course_id);
             
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($fcq);
-            $em->flush();
+        //     $em = $this->getDoctrine()->getManager();
+        //     $em->persist($fcq);
+        //     $em->flush();
 
-            return $this->redirectToRoute('four_course_show', ['id' => $course_id]);
-        }
+        //     return $this->redirectToRoute('four_course_show');
+        // }
 
         return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
-            'form' => $form->createView(),
+//            'form' => $form->createView(),
         ]);
     }
 

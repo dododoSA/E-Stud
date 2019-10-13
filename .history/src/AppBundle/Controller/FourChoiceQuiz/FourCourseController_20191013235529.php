@@ -26,19 +26,19 @@ class FourCourseController extends Controller {
     /**
      * @Route("/genre/four/{id}/show", name="four_course_show")
      */
-    public function showAction($id) {  //問の質問一覧(RoutingをQuiz側のlistにするかどうか迷い中)
+    public function showAction($id) {
+        //
         $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($id);
 
         return $this->render("FourChoiceQuiz/FourCourse/show.html.twig", [
             'quizzes' => $quizzes,
-            'four_course_id' => $id
         ]);
     }
 
     /**
      * @Route("/genre/four/new", name="four_course_new")
      */
-    public function newAction(Request $request) {  //問の新規作成
+    public function newAction(Request $request) {
         $course = new FourCourse();
 
         $form = $this->createFormBuilder($course)
@@ -66,7 +66,7 @@ class FourCourseController extends Controller {
     /**
      * @Route("/genre/four/{id}/edit", name="four_course_edit")
      */
-    public function editAction(Request $request, $id) {  //問の名前変更
+    public function editAction(Request $request, $id) {
         $course = $this->getDoctrine()->getRepository(FourCourse::class)->find($id);
         if (!$course) {
             throw $this->createNotFoundException(
