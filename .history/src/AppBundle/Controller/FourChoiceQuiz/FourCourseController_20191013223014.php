@@ -84,11 +84,7 @@ class FourCourseController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             
-            return $this->redirectToRoute('four_course_list');
+            return $this->redirectToRoute('four_course_list')
         }
-
-        return $this->render("FourChoiceQuiz/FourCourse/edit.html.twig", [
-            'form' => $form->createView()
-        ]);
     }
 }

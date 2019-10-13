@@ -88,7 +88,7 @@ class FourCourseController extends Controller {
         }
 
         return $this->render("FourChoiceQuiz/FourCourse/edit.html.twig", [
-            'form' => $form->createView()
-        ]);
+            'form' => $form;
+        ])
     }
 }

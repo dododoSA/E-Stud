@@ -6,7 +6,7 @@
         {{ course.name }}
         <br />
         <a href="{{ path('four_course_show', { 'id': course.id }) }}">詳細</a>
-        <a href="{{ path('four_course_edit', {'id': course.id }) }}">名前変更</a>
+        <a href="{{ path('four_course_show', {'id': course.id }) }}">名前変更</a>
         <br />
         <br />
     {% endfor %}
