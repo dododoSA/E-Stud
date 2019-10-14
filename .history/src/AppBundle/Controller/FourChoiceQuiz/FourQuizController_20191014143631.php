@@ -85,8 +85,6 @@ class FourQuizController extends Controller {
         $em->remove($quiz);
         $em->flush();
 
-        return $this->redirectToRoute('four_course_show', [
-            'id' => $four_course_id
-        ]);
+        return $this
     }
 }
