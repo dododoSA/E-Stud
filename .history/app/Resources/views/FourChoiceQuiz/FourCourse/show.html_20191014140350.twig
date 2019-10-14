@@ -4,7 +4,7 @@
     <a href="{{ path('four_course_list') }}"><<大問一覧へ</a>
     <h1>問題一覧</h1>
     {% for quiz in quizzes %}
-        {{ quiz.quizNum }}.{{ quiz.question }}
+        {{ quiz.quizNum }}{{ quiz.question }}
         <br />
         {{ quiz.correctAns }}
         <br />

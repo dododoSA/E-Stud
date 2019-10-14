@@ -1,8 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <a href="{{ path('four_course_show', { 'id': four_course_id }) }}"><<設問一覧へ</a>
-    <h1>新しい問題を追加</h1>
+    <h1>新しい質問を追加</h1>
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}

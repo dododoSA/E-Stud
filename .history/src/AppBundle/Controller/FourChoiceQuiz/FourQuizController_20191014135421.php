@@ -38,7 +38,7 @@ class FourQuizController extends Controller {
 
         return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
             'form' => $form->createView(),
-            'four_course_id' => $four_course_id
+            'course_id' => $four_course_id
         ]);
     }
 

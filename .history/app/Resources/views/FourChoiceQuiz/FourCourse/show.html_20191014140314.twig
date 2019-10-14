@@ -4,16 +4,9 @@
     <a href="{{ path('four_course_list') }}"><<大問一覧へ</a>
     <h1>問題一覧</h1>
     {% for quiz in quizzes %}
-        {{ quiz.quizNum }}.{{ quiz.question }}
+        {{ quiz.quizNum }}{{ quiz.question }}
         <br />
         {{ quiz.correctAns }}
-        <br />
-        {{ quiz.wrongAns1 }}
-        <br />
-        {{ quiz.wrongAns2 }}
-        <br />
-        {{ quiz.wrongAns3 }}
-        <br /><br />
     {% endfor %}
     <a href="{{ path('four_quiz_new', {'four_course_id': four_course_id}) }}">追加</a>
 {% endblock %}
