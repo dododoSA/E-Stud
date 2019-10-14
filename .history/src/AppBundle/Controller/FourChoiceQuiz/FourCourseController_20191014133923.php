@@ -108,9 +108,7 @@ class FourCourseController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $em->remove($course);
-        foreach ($quizzes as $quiz) {
-            $em->remove($quiz);
-        }
+        $em->remove($quizzes);
         $em->flush();
 
         return $this->redirectToRoute('four_course_list');

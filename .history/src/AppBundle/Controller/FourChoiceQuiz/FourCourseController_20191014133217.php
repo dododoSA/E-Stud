@@ -103,14 +103,9 @@ class FourCourseController extends Controller {
             throw $this->createNotFoundException();
         }
 
-        $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($id);
-
         $em = $this->getDoctrine()->getManager();
 
         $em->remove($course);
-        foreach ($quizzes as $quiz) {
-            $em->remove($quiz);
-        }
         $em->flush();
 
         return $this->redirectToRoute('four_course_list');
