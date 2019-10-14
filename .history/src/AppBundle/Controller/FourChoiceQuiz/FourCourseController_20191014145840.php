@@ -29,7 +29,6 @@ class FourCourseController extends Controller {
     public function showAction($id) {  //問の質問一覧(RoutingをQuiz側のlistにするかどうか迷い中)
         $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($id);
 
-        //QuizNumでソート
         usort($quizzes, function ($a, $b) {
             return ($a->getQuizNum() < $b->getQuizNum()) ? -1 : 1;
         });

@@ -101,7 +101,7 @@ class FourQuizController extends Controller {
         $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
         foreach ($quizzes as $another_quiz) {
             if ($another_quiz->getQuizNum() >= $quiz->getQuizNum()) {
-                $another_quiz->setQuizNum($another_quiz->getQuizNum() - 1);
+                $another_quiz->setQuizNum($another_quiz->getQuizNum() + 1);
             }
         }
 

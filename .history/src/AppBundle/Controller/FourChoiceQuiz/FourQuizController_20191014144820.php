@@ -67,14 +67,6 @@ class FourQuizController extends Controller {
         if ($form->isSubmitted() && $form->isValid()) {
             $quiz = $form->getData();
 
-            //途中に挿入するときは他の問題の番号をずらす
-            $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
-            foreach ($quizzes as $another_quiz) {
-                if ($another_quiz->getQuizNum() >= $quiz->getQuizNum()) {
-                    $another_quiz->setQuizNum($another_quiz->getQuizNum() + 1);
-                }
-            }
-
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
@@ -95,14 +87,6 @@ class FourQuizController extends Controller {
 
         if (!$quiz || $quiz->getFourCourseId() != $four_course_id) {
             throw $this->createNotFoundException();
-        }
-
-        //途中を削除するときは他の問題の番号をずらす
-        $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
-        foreach ($quizzes as $another_quiz) {
-            if ($another_quiz->getQuizNum() >= $quiz->getQuizNum()) {
-                $another_quiz->setQuizNum($another_quiz->getQuizNum() - 1);
-            }
         }
 
         $em = $this->getDoctrine()->getManager();
