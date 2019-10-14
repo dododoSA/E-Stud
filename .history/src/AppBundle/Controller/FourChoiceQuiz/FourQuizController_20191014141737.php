@@ -62,12 +62,7 @@ class FourQuizController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            return $this->redirectToRoute('four_course_show', ['id' => $four_course_id]);
+            return $this->redirectToRoute('four_course_show', ['id' => $four_course_id])
         }
-
-        return $this->render('FourChoiceQuiz/FourQuiz/edit.html.twig', [
-            'form' => $form->createView(),
-            'four_course_id' => $four_course_id,
-        ]);
     }
 }
