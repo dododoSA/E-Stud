@@ -39,7 +39,7 @@ class FourQuizController extends Controller {
             }
 
             //最後の問題を探す
-            $this->setLastQuiz($quizzes);
+            setLastQuiz($quizzes);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($quiz);
@@ -86,7 +86,7 @@ class FourQuizController extends Controller {
             }
 
             //最後の問題を探す
-            $this->setLastQuiz($quizzes);
+            setLastQuiz($quizzes);
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();

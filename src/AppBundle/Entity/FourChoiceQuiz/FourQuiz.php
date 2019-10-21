@@ -55,8 +55,14 @@ class FourQuiz {
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotNull
      */
     private $fourCourseId;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isLast;
 
     /**
      * Get id
@@ -234,5 +240,29 @@ class FourQuiz {
     public function getFourCourseId()
     {
         return $this->fourCourseId;
+    }
+
+    /**
+     * Set isLast
+     *
+     * @param boolean $isLast
+     *
+     * @return FourQuiz
+     */
+    public function setIsLast($isLast)
+    {
+        $this->isLast = $isLast;
+
+        return $this;
+    }
+
+    /**
+     * Get isLast
+     *
+     * @return boolean
+     */
+    public function getIsLast()
+    {
+        return $this->isLast;
     }
 }

@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div>
+        <a href="{{ path('four_course_list') }}"><<大問一覧へ</a>
+        <h2>{{ course.name }}</h2>
+
+        <a href="{{ path("four_play_quiz", { "four_course_id": course.id, "quiz_num": 1 }) }}">開始</a>
+    </div>
+{% endblock %}

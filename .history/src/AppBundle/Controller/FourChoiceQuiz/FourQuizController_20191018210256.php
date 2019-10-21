@@ -37,9 +37,7 @@ class FourQuizController extends Controller {
                     $another_quiz->setQuizNum($another_quiz->getQuizNum() + 1);
                 }
             }
-
-            //最後の問題を探す
-            $this->setLastQuiz($quizzes);
+            //一番でかい数字だったらラストにする
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($quiz);
@@ -86,7 +84,18 @@ class FourQuizController extends Controller {
             }
 
             //最後の問題を探す
-            $this->setLastQuiz($quizzes);
+            foreach ($quizzes as $another_quiz) {
+                $another_quiz->setIsLast(false);
+            }
+            $last_quiz = reset($quizzes);
+            $last_quiz->setIsLast(true);
+            foreach ($quizzes as $another_quiz) {
+                if ($another_quiz->getQuizNum() >= $last_quiz->getQuizNum()) {
+                    $last_quiz->setIsLast(false);
+                    $last_quiz = $another_quiz;
+                    
+                }
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
@@ -127,19 +136,10 @@ class FourQuizController extends Controller {
         ]);
     }
 
-    private function setLastQuiz(&$quizzes) {
-        foreach ($quizzes as $another_quiz) {
-            $another_quiz->setIsLast(false);
-        }
-        $last_quiz = reset($quizzes);
-        $last_quiz->setIsLast(true);
-        foreach ($quizzes as $another_quiz) {
-            if ($another_quiz->getQuizNum() >= $last_quiz->getQuizNum()) {
-                $last_quiz->setIsLast(false);
-                $last_quiz = $another_quiz;
-                $another_quiz->setIsLast(true);
-                
-            }
+    private function checkLastQuiz($quizzes, $quiz) {
+        $flag = true;
+        foreach($quizzes as $another_quiz) {
+            if ($another_quiz->getQuizNum)
         }
     }
 }

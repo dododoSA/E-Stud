@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div>
+        {% for result in results %}
+            {{ loop.index }}. {{ result.result }}
+        {% endfor %}
+
+        <a href="{{ path('four_course_list') }}"><<大問一覧へ</a>
+    </div>
+{% endblock %}

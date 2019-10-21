@@ -37,9 +37,7 @@ class FourQuizController extends Controller {
                     $another_quiz->setQuizNum($another_quiz->getQuizNum() + 1);
                 }
             }
-
-            //最後の問題を探す
-            $this->setLastQuiz($quizzes);
+            //一番でかい数字だったらラストにする
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($quiz);
@@ -86,7 +84,6 @@ class FourQuizController extends Controller {
             }
 
             //最後の問題を探す
-            $this->setLastQuiz($quizzes);
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();

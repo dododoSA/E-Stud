@@ -7,7 +7,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\FourChoiceQuiz\FourQuizType;
 use AppBundle\Entity\FourChoiceQuiz\FourQuiz;
-use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 
 class FourQuizController extends Controller {
     /**
@@ -38,9 +37,6 @@ class FourQuizController extends Controller {
                 }
             }
 
-            //最後の問題を探す
-            $this->setLastQuiz($quizzes);
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($quiz);
             $em->flush();
@@ -59,6 +55,7 @@ class FourQuizController extends Controller {
      */
     public function editAction(Request $request, $four_course_id, $id) {  //問題の編集
         $quiz = $this->getDoctrine()->getRepository(FourQuiz::class)->find($id);
+        $before_quiz_num = $quiz->getQuizNum();
 
         if (!$quiz || $quiz->getFourCourseId() != $four_course_id) {
             throw $this->createNotFoundException();
@@ -69,7 +66,6 @@ class FourQuizController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $before_quiz_num = $quiz->getQuizNum();
             $quiz = $form->getData();
 
             //途中に挿入するときは一度削除して空いた分をつめて、その後挿入して以降をずらす
@@ -84,9 +80,6 @@ class FourQuizController extends Controller {
                     $another_quiz->setQuizNum($another_quiz->getQuizNum() + 1);
                 }
             }
-
-            //最後の問題を探す
-            $this->setLastQuiz($quizzes);
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
@@ -125,21 +118,5 @@ class FourQuizController extends Controller {
         return $this->redirectToRoute('four_course_show', [
             'id' => $four_course_id
         ]);
-    }
-
-    private function setLastQuiz(&$quizzes) {
-        foreach ($quizzes as $another_quiz) {
-            $another_quiz->setIsLast(false);
-        }
-        $last_quiz = reset($quizzes);
-        $last_quiz->setIsLast(true);
-        foreach ($quizzes as $another_quiz) {
-            if ($another_quiz->getQuizNum() >= $last_quiz->getQuizNum()) {
-                $last_quiz->setIsLast(false);
-                $last_quiz = $another_quiz;
-                $another_quiz->setIsLast(true);
-                
-            }
-        }
     }
 }
