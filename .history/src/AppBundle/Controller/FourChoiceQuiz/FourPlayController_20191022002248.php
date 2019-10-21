@@ -113,6 +113,10 @@ class FourPlayController extends Controller {
             ]);
         }
 
+        //正解とユーザーの選択肢を取得
+        $correct_choices = $session->get('correct_choices');
+        $user_choices = $session->get('user_choices');
+
         //コースのクイズをすべて取得
         $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
         //QuizNumでソート 上のDBから持ってくるときにソートさせたほうがいいかも？
@@ -122,7 +126,6 @@ class FourPlayController extends Controller {
 
         //答え合わせ
         //結果をDBに保存
-        $results = $this->checkAns($quizzes, $session);
 
         //セッションを削除
         $session->remove('correct_choices');
@@ -187,11 +190,7 @@ class FourPlayController extends Controller {
      * result用
      */
 
-    private function checkAns($quizzes, &$session) {
-        //正解とユーザーの選択肢を取得
-        $correct_choices = $session->get('correct_choices');
-        $user_choices = $session->get('user_choices');
-
+    private function checkAns($correct_choices, $user_choices, $quizzes) {
         $em = $this->getDoctrine()->getManager();
         foreach ($correct_choices as $quiz_num_as_i => $correct_choice) {
             $results[$quiz_num_as_i] = new FourResult;
@@ -203,7 +202,7 @@ class FourPlayController extends Controller {
             } {
                 //エラーハンドリングしたい
             }
-            if ($correct_choice == $user_choices[$quiz_num_as_i]) {
+            if ($correct_choices[$quiz_num_as_i] == $user_choices[$quiz_num_as_i]) {
                 $results[$quiz_num_as_i]->setResult('correct');
             }
             else {
@@ -220,7 +219,7 @@ class FourPlayController extends Controller {
     private function searchQuizId($quiz_num, $quizzes) {
         //線形探索
         foreach ($quizzes as $quiz) {
-            if ($quiz_num == $quiz->getQuizNum()) {
+            if ($quiz_num == $quiz->getId()) {
                 return $quiz->getId();
             }
         }

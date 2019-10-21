@@ -53,9 +53,6 @@ class FourPlayController extends Controller {
         //選択肢を生成
         $choices = $this->getChoices($quiz);
 
-        //セッションに正解と問題idを書き込む
-        $this->setCorrectAns($quiz_num, $quiz, $choices, $session);
-
         //フォームを作成
         $form = $this->createFormBuilder()
             ->add('answer', ChoiceType::class, [
@@ -69,6 +66,16 @@ class FourPlayController extends Controller {
             ])
             ->add('next', SubmitType::class)
             ->getForm();
+
+        //セッションに正解と問題idを書き込む
+        foreach ($choices as $key => $value) {
+            if ($value == $quiz->getCorrectAns()) {
+                $correct_choices = $session->get('correct_choices');
+                $correct_choices[$quiz_num] = $key;
+                $session->set('correct_choices', $correct_choices);
+            }
+        }
+
         $form->handleRequest($request);
 
         //選択を受け付けたら
@@ -76,7 +83,9 @@ class FourPlayController extends Controller {
             //セッションにユーザーの解答を書き込む
             $form_data = $form->getData();
             $user_answer = $form_data['answer'];
-            $this->setUserAns($quiz_num, $user_answer, $session);
+            $user_choices = $session->get('user_choices');
+            $user_choices[$quiz_num] = $user_answer;
+            $session->set('user_choices', $user_choices);
 
             //クイズが最後かどうかで場合分け
             if ($quiz->getIsLast()) {
@@ -102,7 +111,6 @@ class FourPlayController extends Controller {
     function resultAction(Request $request, $four_course_id) {
         $session = $request->getSession();
 
-        //途中から開始するのを防ぐため
         if ($session->get('selected_four_course_id') != $four_course_id) {
             $this->addFlash(
                 'error',
@@ -113,7 +121,10 @@ class FourPlayController extends Controller {
             ]);
         }
 
-        //コースのクイズをすべて取得
+        //正解とユーザーの選択肢
+        $correct_choices = $session->get('correct_choices');
+        $user_choices = $session->get('user_choices');
+
         $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
         //QuizNumでソート 上のDBから持ってくるときにソートさせたほうがいいかも？
         usort($quizzes, function ($a, $b) {
@@ -122,7 +133,22 @@ class FourPlayController extends Controller {
 
         //答え合わせ
         //結果をDBに保存
-        $results = $this->checkAns($quizzes, $session);
+        $em = $this->getDoctrine()->getManager();
+        for ($i = 1; $i <= count($correct_choices); $i++) {
+            $results[$i] = new FourResult;
+            $results[$i]->setUserId(1);//////////////////////
+            $results[$i]->setDate(new DateTime());
+            $results[$i]->setFourQuizId($quizzes[$i - 1]->getId());//マジックナンバーをなくしたい
+            if ($correct_choices[$i] == $user_choices[$i]) {
+                $results[$i]->setResult('correct');
+            }
+            else {
+                $results[$i]->setResult('wrong');
+            }
+            $em->persist($results[$i]);
+        }
+
+        $em->flush();
 
         //セッションを削除
         $session->remove('correct_choices');
@@ -136,9 +162,6 @@ class FourPlayController extends Controller {
         ]);
     }
 
-    /**
-     * quiz用
-     */
     private function getQuiz($four_course_id, $quiz_num) {
         $repository = $this->getDoctrine()->getRepository(FourQuiz::class);
         $query = $repository->createQueryBuilder('q')
@@ -165,65 +188,5 @@ class FourPlayController extends Controller {
         shuffle($choices);
         
         return $choices;
-    }
-
-    private function setCorrectAns($quiz_num, $quiz, $choices, &$session) {
-        foreach ($choices as $key => $value) {
-            if ($value == $quiz->getCorrectAns()) {
-                $correct_choices = $session->get('correct_choices');
-                $correct_choices[$quiz_num] = $key;
-                $session->set('correct_choices', $correct_choices);
-            }
-        }
-    }
-
-    private function setUserAns($quiz_num, $user_answer, &$session) {
-        $user_choices = $session->get('user_choices');
-        $user_choices[$quiz_num] = $user_answer;
-        $session->set('user_choices', $user_choices);
-    }
-
-    /**
-     * result用
-     */
-
-    private function checkAns($quizzes, &$session) {
-        //正解とユーザーの選択肢を取得
-        $correct_choices = $session->get('correct_choices');
-        $user_choices = $session->get('user_choices');
-
-        $em = $this->getDoctrine()->getManager();
-        foreach ($correct_choices as $quiz_num_as_i => $correct_choice) {
-            $results[$quiz_num_as_i] = new FourResult;
-            $results[$quiz_num_as_i]->setUserId(1);//////////////////////
-            $results[$quiz_num_as_i]->setDate(new DateTime());
-            $quiz_id = $this->searchQuizId($quiz_num_as_i, $quizzes);
-            if ($quiz_id !== null) {
-                $results[$quiz_num_as_i]->setFourQuizId($quiz_id);//マジックナンバーをなくしたい
-            } {
-                //エラーハンドリングしたい
-            }
-            if ($correct_choice == $user_choices[$quiz_num_as_i]) {
-                $results[$quiz_num_as_i]->setResult('correct');
-            }
-            else {
-                $results[$quiz_num_as_i]->setResult('wrong');
-            }
-            $em->persist($results[$quiz_num_as_i]);
-        }
-
-        $em->flush();
-
-        return $results;
-    }
-
-    private function searchQuizId($quiz_num, $quizzes) {
-        //線形探索
-        foreach ($quizzes as $quiz) {
-            if ($quiz_num == $quiz->getQuizNum()) {
-                return $quiz->getId();
-            }
-        }
-        return null;
     }
 }

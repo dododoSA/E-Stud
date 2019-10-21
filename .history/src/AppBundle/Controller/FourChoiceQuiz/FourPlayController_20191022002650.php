@@ -203,7 +203,7 @@ class FourPlayController extends Controller {
             } {
                 //エラーハンドリングしたい
             }
-            if ($correct_choice == $user_choices[$quiz_num_as_i]) {
+            if ($correct_choices[$quiz_num_as_i] == $user_choices[$quiz_num_as_i]) {
                 $results[$quiz_num_as_i]->setResult('correct');
             }
             else {
@@ -220,7 +220,7 @@ class FourPlayController extends Controller {
     private function searchQuizId($quiz_num, $quizzes) {
         //線形探索
         foreach ($quizzes as $quiz) {
-            if ($quiz_num == $quiz->getQuizNum()) {
+            if ($quiz_num == $quiz->getId()) {
                 return $quiz->getId();
             }
         }

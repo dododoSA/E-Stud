@@ -220,7 +220,7 @@ class FourPlayController extends Controller {
     private function searchQuizId($quiz_num, $quizzes) {
         //線形探索
         foreach ($quizzes as $quiz) {
-            if ($quiz_num == $quiz->getQuizNum()) {
+            if ($quiz_num == $quiz->getId()) {
                 return $quiz->getId();
             }
         }

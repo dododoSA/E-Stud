@@ -113,6 +113,10 @@ class FourPlayController extends Controller {
             ]);
         }
 
+        //正解とユーザーの選択肢を取得
+        $correct_choices = $session->get('correct_choices');
+        $user_choices = $session->get('user_choices');
+
         //コースのクイズをすべて取得
         $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
         //QuizNumでソート 上のDBから持ってくるときにソートさせたほうがいいかも？
@@ -122,7 +126,6 @@ class FourPlayController extends Controller {
 
         //答え合わせ
         //結果をDBに保存
-        $results = $this->checkAns($quizzes, $session);
 
         //セッションを削除
         $session->remove('correct_choices');
@@ -187,43 +190,24 @@ class FourPlayController extends Controller {
      * result用
      */
 
-    private function checkAns($quizzes, &$session) {
-        //正解とユーザーの選択肢を取得
-        $correct_choices = $session->get('correct_choices');
-        $user_choices = $session->get('user_choices');
-
+    private function checkAns($correct_choices, $user_choices, $quizzes) {
         $em = $this->getDoctrine()->getManager();
-        foreach ($correct_choices as $quiz_num_as_i => $correct_choice) {
-            $results[$quiz_num_as_i] = new FourResult;
-            $results[$quiz_num_as_i]->setUserId(1);//////////////////////
-            $results[$quiz_num_as_i]->setDate(new DateTime());
-            $quiz_id = $this->searchQuizId($quiz_num_as_i, $quizzes);
-            if ($quiz_id !== null) {
-                $results[$quiz_num_as_i]->setFourQuizId($quiz_id);//マジックナンバーをなくしたい
-            } {
-                //エラーハンドリングしたい
-            }
-            if ($correct_choice == $user_choices[$quiz_num_as_i]) {
-                $results[$quiz_num_as_i]->setResult('correct');
+        foreach ($correct_choices as $quiz_num_as_index => $correct_choice) {
+            $results[$i] = new FourResult;
+            $results[$i]->setUserId(1);//////////////////////
+            $results[$i]->setDate(new DateTime());
+            $results[$i]->setFourQuizId($quizzes[$i - 1]->getId());//マジックナンバーをなくしたい
+            if ($correct_choices[$i] == $user_choices[$i]) {
+                $results[$i]->setResult('correct');
             }
             else {
-                $results[$quiz_num_as_i]->setResult('wrong');
+                $results[$i]->setResult('wrong');
             }
-            $em->persist($results[$quiz_num_as_i]);
+            $em->persist($results[$i]);
         }
 
         $em->flush();
 
         return $results;
-    }
-
-    private function searchQuizId($quiz_num, $quizzes) {
-        //線形探索
-        foreach ($quizzes as $quiz) {
-            if ($quiz_num == $quiz->getQuizNum()) {
-                return $quiz->getId();
-            }
-        }
-        return null;
     }
 }

@@ -113,7 +113,10 @@ class FourPlayController extends Controller {
             ]);
         }
 
-        //コースのクイズをすべて取得
+        //正解とユーザーの選択肢を取得
+        $correct_choices = $session->get('correct_choices');
+        $user_choices = $session->get('user_choices');
+
         $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
         //QuizNumでソート 上のDBから持ってくるときにソートさせたほうがいいかも？
         usort($quizzes, function ($a, $b) {
@@ -122,7 +125,22 @@ class FourPlayController extends Controller {
 
         //答え合わせ
         //結果をDBに保存
-        $results = $this->checkAns($quizzes, $session);
+        $em = $this->getDoctrine()->getManager();
+        for ($i = 1; $i <= count($correct_choices); $i++) {
+            $results[$i] = new FourResult;
+            $results[$i]->setUserId(1);//////////////////////
+            $results[$i]->setDate(new DateTime());
+            $results[$i]->setFourQuizId($quizzes[$i - 1]->getId());//マジックナンバーをなくしたい
+            if ($correct_choices[$i] == $user_choices[$i]) {
+                $results[$i]->setResult('correct');
+            }
+            else {
+                $results[$i]->setResult('wrong');
+            }
+            $em->persist($results[$i]);
+        }
+
+        $em->flush();
 
         //セッションを削除
         $session->remove('correct_choices');
@@ -136,9 +154,6 @@ class FourPlayController extends Controller {
         ]);
     }
 
-    /**
-     * quiz用
-     */
     private function getQuiz($four_course_id, $quiz_num) {
         $repository = $this->getDoctrine()->getRepository(FourQuiz::class);
         $query = $repository->createQueryBuilder('q')
@@ -181,49 +196,5 @@ class FourPlayController extends Controller {
         $user_choices = $session->get('user_choices');
         $user_choices[$quiz_num] = $user_answer;
         $session->set('user_choices', $user_choices);
-    }
-
-    /**
-     * result用
-     */
-
-    private function checkAns($quizzes, &$session) {
-        //正解とユーザーの選択肢を取得
-        $correct_choices = $session->get('correct_choices');
-        $user_choices = $session->get('user_choices');
-
-        $em = $this->getDoctrine()->getManager();
-        foreach ($correct_choices as $quiz_num_as_i => $correct_choice) {
-            $results[$quiz_num_as_i] = new FourResult;
-            $results[$quiz_num_as_i]->setUserId(1);//////////////////////
-            $results[$quiz_num_as_i]->setDate(new DateTime());
-            $quiz_id = $this->searchQuizId($quiz_num_as_i, $quizzes);
-            if ($quiz_id !== null) {
-                $results[$quiz_num_as_i]->setFourQuizId($quiz_id);//マジックナンバーをなくしたい
-            } {
-                //エラーハンドリングしたい
-            }
-            if ($correct_choice == $user_choices[$quiz_num_as_i]) {
-                $results[$quiz_num_as_i]->setResult('correct');
-            }
-            else {
-                $results[$quiz_num_as_i]->setResult('wrong');
-            }
-            $em->persist($results[$quiz_num_as_i]);
-        }
-
-        $em->flush();
-
-        return $results;
-    }
-
-    private function searchQuizId($quiz_num, $quizzes) {
-        //線形探索
-        foreach ($quizzes as $quiz) {
-            if ($quiz_num == $quiz->getQuizNum()) {
-                return $quiz->getId();
-            }
-        }
-        return null;
     }
 }

@@ -122,7 +122,7 @@ class FourPlayController extends Controller {
 
         //答え合わせ
         //結果をDBに保存
-        $results = $this->checkAns($quizzes, $session);
+        $results = $this->checkAns($four_course_id, $session);
 
         //セッションを削除
         $session->remove('correct_choices');
@@ -187,7 +187,7 @@ class FourPlayController extends Controller {
      * result用
      */
 
-    private function checkAns($quizzes, &$session) {
+    private function checkAns($four_course_id, &$session) {
         //正解とユーザーの選択肢を取得
         $correct_choices = $session->get('correct_choices');
         $user_choices = $session->get('user_choices');
@@ -203,7 +203,7 @@ class FourPlayController extends Controller {
             } {
                 //エラーハンドリングしたい
             }
-            if ($correct_choice == $user_choices[$quiz_num_as_i]) {
+            if ($correct_choices[$quiz_num_as_i] == $user_choices[$quiz_num_as_i]) {
                 $results[$quiz_num_as_i]->setResult('correct');
             }
             else {
@@ -220,7 +220,7 @@ class FourPlayController extends Controller {
     private function searchQuizId($quiz_num, $quizzes) {
         //線形探索
         foreach ($quizzes as $quiz) {
-            if ($quiz_num == $quiz->getQuizNum()) {
+            if ($quiz_num == $quiz->getId()) {
                 return $quiz->getId();
             }
         }
