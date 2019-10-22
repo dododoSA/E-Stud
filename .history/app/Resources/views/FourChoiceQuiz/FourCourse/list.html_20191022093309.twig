@@ -3,7 +3,7 @@
 {% block body %}
     <h1>大門一覧</h1>
     {% for course in courses %}
-        <a href="{{ path('four_play_index', { 'four_course_id': course.id }) }}">{{ course.name }}</a>
+        <a href="{{ path('four_play_index', { 'id': course.id }) }}">{{ course.name }}</a>
         <br />
         <a href="{{ path('four_course_show', { 'id': course.id }) }}">詳細</a>
         <a href="{{ path('four_course_edit', {'id': course.id }) }}">名前変更</a>

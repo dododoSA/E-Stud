@@ -7,7 +7,7 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% for message in app.flashes('error') %}
+        {% for message in app.flashes('warning') %}
             <div>
                 {{ message }}
             </div>
