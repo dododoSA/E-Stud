@@ -101,7 +101,7 @@ class FourPlayController extends Controller {
             }
             $session->set('four_results', $results);
             //セッションに結果を書き込む
-            //trigger_error;
+            trigger_error;
 
             //クイズが最後かどうかで場合分け
             if ($quiz->getIsLast()) {

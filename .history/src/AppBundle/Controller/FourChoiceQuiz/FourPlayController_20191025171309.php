@@ -53,9 +53,9 @@ class FourPlayController extends Controller {
 
         //URLのパラメータ操作によって問題を飛ばすのを防ぐため
         if ($quiz_num != 1) {
-            $four_results = $session->get('four_results');
+            $user_choices = $session->get('user_choices');
             for ($i = 1; $i < $quiz_num; $i++) { 
-                if(!isset($four_results[$i])) {
+                if(!isset($user_choices[$i])) {
                     $this->addFlash(
                         'error',
                         '不正なリクエストです'
@@ -74,25 +74,24 @@ class FourPlayController extends Controller {
         $form = $this->createFormBuilder()
             ->add('answer', ChoiceType::class, [
                 'choices' => [
-                    $choices[1] => $choices[1],
-                    $choices[2] => $choices[2],
-                    $choices[3] => $choices[3],
-                    $choices[4] => $choices[4],
+                    '1.'.$choices[0] => $choices[0],
+                    '2.'.$choices[1] => $choices[1],
+                    '3.'.$choices[2] => $choices[2],
+                    '4.'.$choices[3] => $choices[3],
                 ],
                 'expanded' => true
             ])
             ->add('next', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-        dump($form->createView());
 
         //選択を受け付けたら
         if ($form->isSubmitted() && $form->isValid()) {
 
             $results = $session->get('four_results');
             //正誤判定
-            $user_answer = $form['answer']->getData();
-            dump($user_answer);
+            $form_data = $form->getData();
+            $user_answer = $form_data['answer'];
             if ($user_answer == $quiz->getCorrectAns()) {
                 $results[$quiz_num] = 'correct';
             }
@@ -101,7 +100,6 @@ class FourPlayController extends Controller {
             }
             $session->set('four_results', $results);
             //セッションに結果を書き込む
-            //trigger_error;
 
             //クイズが最後かどうかで場合分け
             if ($quiz->getIsLast()) {
@@ -153,7 +151,7 @@ class FourPlayController extends Controller {
         foreach($results as $quiz_num => $result) {
             $four_result = new FourResult;
             $four_result->setUserId(1);
-            $four_result->setDate(new DateTime());
+            $four_result->setDate(new Date());
             $quiz_id  = $this->searchQuizId($quiz_num, $quizzes);
             if ($quiz_id !== null) {
                 $four_result->setFourQuizId($quiz_id);//マジックナンバーをなくしたい
@@ -203,6 +201,8 @@ class FourPlayController extends Controller {
             3 => $quiz->getWrongAns2(),
             4 => $quiz->getWrongAns3(),
         ];
+
+        shuffle($choices);
         
         return $choices;
     }

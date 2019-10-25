@@ -74,7 +74,7 @@ class FourPlayController extends Controller {
         $form = $this->createFormBuilder()
             ->add('answer', ChoiceType::class, [
                 'choices' => [
-                    $choices[1] => $choices[1],
+                    $choices[1]] => $choices[1],
                     $choices[2] => $choices[2],
                     $choices[3] => $choices[3],
                     $choices[4] => $choices[4],
@@ -84,7 +84,6 @@ class FourPlayController extends Controller {
             ->add('next', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-        dump($form->createView());
 
         //選択を受け付けたら
         if ($form->isSubmitted() && $form->isValid()) {
@@ -101,7 +100,7 @@ class FourPlayController extends Controller {
             }
             $session->set('four_results', $results);
             //セッションに結果を書き込む
-            //trigger_error;
+            trigger_error;
 
             //クイズが最後かどうかで場合分け
             if ($quiz->getIsLast()) {

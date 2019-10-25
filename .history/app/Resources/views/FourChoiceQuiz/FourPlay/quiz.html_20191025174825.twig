@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div>
+        {{ form_start(form) }}
+        {{ form_widget(form.answer) }}
+        {{ form_widget(form.answer.choices[1]) }}
+        {{ form_widget(form.answer.choices[3]) }}
+        {{ form_widget(form.answer.choices[0]) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

@@ -74,24 +74,24 @@ class FourPlayController extends Controller {
         $form = $this->createFormBuilder()
             ->add('answer', ChoiceType::class, [
                 'choices' => [
-                    $choices[1] => $choices[1],
-                    $choices[2] => $choices[2],
-                    $choices[3] => $choices[3],
-                    $choices[4] => $choices[4],
+                    '1.'.$choices[0] => $choices[0],
+                    '2.'.$choices[1] => $choices[1],
+                    '3.'.$choices[2] => $choices[2],
+                    '4.'.$choices[3] => $choices[3],
                 ],
                 'expanded' => true
             ])
             ->add('next', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-        dump($form->createView());
 
         //選択を受け付けたら
         if ($form->isSubmitted() && $form->isValid()) {
 
             $results = $session->get('four_results');
             //正誤判定
-            $user_answer = $form['answer']->getData();
+            $form_data = $form->getData();
+            $user_answer = $form_data['answer'];
             dump($user_answer);
             if ($user_answer == $quiz->getCorrectAns()) {
                 $results[$quiz_num] = 'correct';
@@ -101,7 +101,7 @@ class FourPlayController extends Controller {
             }
             $session->set('four_results', $results);
             //セッションに結果を書き込む
-            //trigger_error;
+            trigger_error;
 
             //クイズが最後かどうかで場合分け
             if ($quiz->getIsLast()) {
@@ -203,6 +203,8 @@ class FourPlayController extends Controller {
             3 => $quiz->getWrongAns2(),
             4 => $quiz->getWrongAns3(),
         ];
+
+        shuffle($choices);
         
         return $choices;
     }

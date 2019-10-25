@@ -84,7 +84,7 @@ class FourPlayController extends Controller {
             ->add('next', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-        dump($form->createView());
+        dump($form);
 
         //選択を受け付けたら
         if ($form->isSubmitted() && $form->isValid()) {

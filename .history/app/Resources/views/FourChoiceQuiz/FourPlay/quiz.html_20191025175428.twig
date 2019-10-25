@@ -3,10 +3,11 @@
 {% block body %}
     <div>
         {{ form_start(form) }}
-        {{ form_label(form.answer[1]) }}
-        {{ form_widget(form.answer[1]) }}
-        {{ form_label(form.answer[0]) }}
+        {{ form_widget(form.answer.[1]) }}
         {{ form_widget(form.answer[0]) }}
         {{ form_end(form) }}
+        <script>
+        console
+        </script>
     </div>
 {% endblock %}

@@ -11,7 +11,6 @@ use AppBundle\Entity\FourChoiceQuiz\FourQuiz;
 use AppBundle\Entity\FourChoiceQuiz\FourCourse;
 use AppBundle\Entity\FourChoiceQuiz\FourResult;
 use DateTime;
-use Symfony\Component\Validator\Constraints\Date;
 
 class FourPlayController extends Controller {
     /**
@@ -53,9 +52,9 @@ class FourPlayController extends Controller {
 
         //URLのパラメータ操作によって問題を飛ばすのを防ぐため
         if ($quiz_num != 1) {
-            $four_results = $session->get('four_results');
+            $user_choices = $session->get('user_choices');
             for ($i = 1; $i < $quiz_num; $i++) { 
-                if(!isset($four_results[$i])) {
+                if(!isset($user_choices[$i])) {
                     $this->addFlash(
                         'error',
                         '不正なリクエストです'
@@ -67,41 +66,40 @@ class FourPlayController extends Controller {
             }
         }
 
-        //選択肢を生成
-        $choices = $this->getChoices($quiz);
+        $is_shuffled = $session->get('is_shuffled');
+        if (!$is_shuffled[$quiz_num]) {
+            //選択肢を生成
+            $choices = $this->getChoices($quiz);
+            dump($choices);
+            //セッションに正解と問題idを書き込む
+            $this->setCorrectAns($quiz_num, $quiz, $choices, $session);
+            $is_shuffled[$quiz_num] = true;
+            $session->set('is_shuffled', $is_shuffled);
+        }
 
         //フォームを作成
         $form = $this->createFormBuilder()
             ->add('answer', ChoiceType::class, [
                 'choices' => [
-                    $choices[1] => $choices[1],
-                    $choices[2] => $choices[2],
-                    $choices[3] => $choices[3],
-                    $choices[4] => $choices[4],
+                    '1.'.$choices[1] => 1,
+                    '2.'.$choices[2] => 2,
+                    '3.'.$choices[3] => 3,
+                    '4.'.$choices[4] => 4,
                 ],
                 'expanded' => true
             ])
             ->add('next', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-        dump($form->createView());
+        dump($choices);
 
         //選択を受け付けたら
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $results = $session->get('four_results');
-            //正誤判定
-            $user_answer = $form['answer']->getData();
-            dump($user_answer);
-            if ($user_answer == $quiz->getCorrectAns()) {
-                $results[$quiz_num] = 'correct';
-            }
-            else {
-                $results[$quiz_num] = 'wrong';
-            }
-            $session->set('four_results', $results);
-            //セッションに結果を書き込む
-            //trigger_error;
+            trigger_error('');
+            //セッションにユーザーの解答を書き込む
+            $form_data = $form->getData();
+            $user_answer = $form_data['answer'];
+            $this->setUserAns($quiz_num, $user_answer, $session);
 
             //クイズが最後かどうかで場合分け
             if ($quiz->getIsLast()) {
@@ -117,7 +115,8 @@ class FourPlayController extends Controller {
         }
 
         return $this->render("FourChoiceQuiz/FourPlay/quiz.html.twig", [
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "quiz" => $quiz
         ]);
     }
 
@@ -145,30 +144,13 @@ class FourPlayController extends Controller {
             return ($a->getQuizNum() < $b->getQuizNum()) ? -1 : 1;
         });
 
-        // //答え合わせ
-        //結果を取得
-        $results = $session->get('four_results');
-        $em = $this->getDoctrine()->getManager();
-
-        foreach($results as $quiz_num => $result) {
-            $four_result = new FourResult;
-            $four_result->setUserId(1);
-            $four_result->setDate(new DateTime());
-            $quiz_id  = $this->searchQuizId($quiz_num, $quizzes);
-            if ($quiz_id !== null) {
-                $four_result->setFourQuizId($quiz_id);//マジックナンバーをなくしたい
-            } 
-            $four_result->setResult($result);
-            $em->persist($four_result);
-        }
-
-
-        $em->flush();
+        //答え合わせ
+        //結果をDBに保存
+        $results = $this->checkAns($quizzes, $session);
 
         //セッションを削除
         $session->remove('correct_choices');
         $session->remove('user_choices');
-        $session->remove('four_results');
         $session->remove('selected_four_course_id');
 
         return $this->render("FourChoiceQuiz/FourPlay/result.html.twig", [
@@ -198,13 +180,24 @@ class FourPlayController extends Controller {
 
     private function getChoices($quiz) {
         $choices = [
-            1 => $quiz->getCorrectAns(),
-            2 => $quiz->getWrongAns1(),
-            3 => $quiz->getWrongAns2(),
-            4 => $quiz->getWrongAns3(),
+            '1' => $quiz->getCorrectAns(),
+            '2' => $quiz->getWrongAns1(),
+            '3' => $quiz->getWrongAns2(),
+            '4' => $quiz->getWrongAns3(),
         ];
+
+        //マジックナンバー多めで嫌
+        $arrayKey = [1, 2, 3, 4];
+
+        shuffle($arrayKey);
+
+        $shuffled_choices = [];
+
+        for ($i = 1; $i <= 4; $i++) {
+            $shuffled_choices[$i] = $choices[$arrayKey[$i - 1]];
+        }
         
-        return $choices;
+        return $shuffled_choices;
     }
 
     private function setCorrectAns($quiz_num, $quiz, $choices, &$session) {
@@ -215,6 +208,8 @@ class FourPlayController extends Controller {
                 $session->set('correct_choices', $correct_choices);
             }
         }
+        dump($choices);
+        dump($correct_choices);
     }
 
     private function setUserAns($quiz_num, $user_answer, &$session) {
@@ -231,6 +226,10 @@ class FourPlayController extends Controller {
         //正解とユーザーの選択肢を取得
         $correct_choices = $session->get('correct_choices');
         $user_choices = $session->get('user_choices');
+
+        dump($correct_choices);
+        dump($user_choices);
+
         $em = $this->getDoctrine()->getManager();
         foreach ($correct_choices as $quiz_num_as_i => $correct_choice) {
             $results[$quiz_num_as_i] = new FourResult;
@@ -242,10 +241,6 @@ class FourPlayController extends Controller {
             } {
                 //エラーハンドリングしたい
             }
-            dump($user_choices);
-            dump($correct_choices);
-            trigger_error();
-    
             if ($correct_choice == $user_choices[$quiz_num_as_i]) {
                 $results[$quiz_num_as_i]->setResult('correct');
             }
