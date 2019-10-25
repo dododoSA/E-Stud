@@ -116,13 +116,13 @@ class FourPlayController extends Controller {
             }
         }
 
-        $choice_num = [0, 1];
+        $choice_num = [1, 2, 3, 4];
 
         shuffle($choice_num);
 
         return $this->render("FourChoiceQuiz/FourPlay/quiz.html.twig", [
             "form" => $form->createView(),
-            "choice_num" => $choice_num,
+            "choice_num" => $choice_num;
         ]);
     }
 

@@ -116,13 +116,8 @@ class FourPlayController extends Controller {
             }
         }
 
-        $choice_num = [0, 1];
-
-        shuffle($choice_num);
-
         return $this->render("FourChoiceQuiz/FourPlay/quiz.html.twig", [
-            "form" => $form->createView(),
-            "choice_num" => $choice_num,
+            "form" => $form->createView()
         ]);
     }
 
@@ -172,6 +167,8 @@ class FourPlayController extends Controller {
 
         //セッションを削除
         $session->remove('correct_choices');
+        $session->remove('user_choices');
+        $session->remove('four_results');
         $session->remove('selected_four_course_id');
 
         return $this->render("FourChoiceQuiz/FourPlay/result.html.twig", [

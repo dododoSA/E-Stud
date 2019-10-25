@@ -116,13 +116,8 @@ class FourPlayController extends Controller {
             }
         }
 
-        $choice_num = [0, 1];
-
-        shuffle($choice_num);
-
         return $this->render("FourChoiceQuiz/FourPlay/quiz.html.twig", [
-            "form" => $form->createView(),
-            "choice_num" => $choice_num,
+            "form" => $form->createView()
         ]);
     }
 
@@ -172,6 +167,8 @@ class FourPlayController extends Controller {
 
         //セッションを削除
         $session->remove('correct_choices');
+        $session->remove('user_choices');
+        $session->remove('four_results');
         $session->remove('selected_four_course_id');
 
         return $this->render("FourChoiceQuiz/FourPlay/result.html.twig", [
@@ -208,6 +205,56 @@ class FourPlayController extends Controller {
         ];
         
         return $choices;
+    }
+
+    private function setCorrectAns($quiz_num, $quiz, $choices, &$session) {
+        foreach ($choices as $key => $value) {
+            if ($value == $quiz->getCorrectAns()) {
+                $correct_choices = $session->get('correct_choices');
+                $correct_choices[$quiz_num] = $key;
+                $session->set('correct_choices', $correct_choices);
+            }
+        }
+    }
+
+    private function setUserAns($quiz_num, $user_answer, &$session) {
+        $user_choices = $session->get('user_choices');
+        $user_choices[$quiz_num] = $user_answer;
+        $session->set('user_choices', $user_choices);
+    }
+
+    /**
+     * result用
+     */
+
+    private function checkAns($quizzes, &$session) {
+        //正解とユーザーの選択肢を取得
+        $correct_choices = $session->get('correct_choices');
+        $user_choices = $session->get('user_choices');
+        $em = $this->getDoctrine()->getManager();
+        foreach ($correct_choices as $quiz_num_as_i => $correct_choice) {
+            $results[$quiz_num_as_i] = new FourResult;
+            $results[$quiz_num_as_i]->setUserId(1);//////////////////////
+            $results[$quiz_num_as_i]->setDate(new DateTime());
+            $quiz_id = $this->searchQuizId($quiz_num_as_i, $quizzes);
+            if ($quiz_id !== null) {
+                $results[$quiz_num_as_i]->setFourQuizId($quiz_id);//マジックナンバーをなくしたい
+            } {
+                //エラーハンドリングしたい
+            }
+    
+            if ($correct_choice == $user_choices[$quiz_num_as_i]) {
+                $results[$quiz_num_as_i]->setResult('correct');
+            }
+            else {
+                $results[$quiz_num_as_i]->setResult('wrong');
+            }
+            $em->persist($results[$quiz_num_as_i]);
+        }
+
+        $em->flush();
+
+        return $results;
     }
 
     private function searchQuizId($quiz_num, $quizzes) {

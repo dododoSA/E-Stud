@@ -116,7 +116,7 @@ class FourPlayController extends Controller {
             }
         }
 
-        $choice_num = [0, 1];
+        $choice_num = [0, 1, 2, 3];
 
         shuffle($choice_num);
 
