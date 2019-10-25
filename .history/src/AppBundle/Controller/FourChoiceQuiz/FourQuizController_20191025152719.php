@@ -98,7 +98,7 @@ class FourQuizController extends Controller {
                 }
             }
 
-            if (!$this->checkSerialQuizNum($quizzes)) {
+            if (!checkSerialQuizNum($quizzes)) {
                 $this->addFlash(
                     'error',
                     '問題が連番になっていません'

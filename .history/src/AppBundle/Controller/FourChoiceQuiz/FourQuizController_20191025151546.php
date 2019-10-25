@@ -98,17 +98,6 @@ class FourQuizController extends Controller {
                 }
             }
 
-            if (!$this->checkSerialQuizNum($quizzes)) {
-                $this->addFlash(
-                    'error',
-                    '問題が連番になっていません'
-                );
-                return $this->render('FourChoiceQuiz/FourQuiz/edit.html.twig', [
-                    'form' => $form->createView(),
-                    'four_course_id' => $four_course_id,
-                ]);
-            }
-
             //最後の問題を探す
             $this->setLastQuiz($quizzes);
 
@@ -177,15 +166,5 @@ class FourQuizController extends Controller {
                 
             }
         }
-    }
-
-    private function checkSerialQuizNum($quizzes) {
-        foreach ($quizzes as $quiz) {
-            if ($quiz->getIsLast() && $quiz->getQuizNum() == count($quizzes)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

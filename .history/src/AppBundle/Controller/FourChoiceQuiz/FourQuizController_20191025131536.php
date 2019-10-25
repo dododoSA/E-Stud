@@ -5,6 +5,7 @@ namespace AppBundle\Controller\FourChoiceQuiz;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\FourChoiceQuiz\FourQuizType;
 use AppBundle\Entity\FourChoiceQuiz\FourQuiz;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -63,7 +64,6 @@ class FourQuizController extends Controller {
      */
     public function editAction(Request $request, $four_course_id, $id) {  //問題の編集
         $quiz = $this->getDoctrine()->getRepository(FourQuiz::class)->find($id);
-        $before_quiz_num = $quiz->getQuizNum();
 
         if (!$quiz || $quiz->getFourCourseId() != $four_course_id) {
             throw $this->createNotFoundException();
@@ -82,31 +82,20 @@ class FourQuizController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $before_quiz_num = $quiz->getQuizNum();
             $quiz = $form->getData();
 
             //途中に挿入するときは一度削除して空いた分をつめて、その後挿入して以降をずらす
             $quizzes = $this->getDoctrine()->getRepository(FourQuiz::class)->findByFourCourseId($four_course_id);
-            
             foreach ($quizzes as $another_quiz) {
-                if ($another_quiz->getQuizNum() >= $before_quiz_num && $another_quiz->getId() != $quiz->getId()) {
+                if ($another_quiz->getQuizNum() >= $before_quiz_num) {
                     $another_quiz->setQuizNum($another_quiz->getQuizNum() - 1);
                 }
             }
             foreach ($quizzes as $another_quiz) {
-                if ($another_quiz->getQuizNum() >= $quiz->getQuizNum() && $another_quiz->getId() != $quiz->getId()) {
+                if ($another_quiz->getQuizNum() >= $quiz->getQuizNum()) {
                     $another_quiz->setQuizNum($another_quiz->getQuizNum() + 1);
                 }
-            }
-
-            if (!$this->checkSerialQuizNum($quizzes)) {
-                $this->addFlash(
-                    'error',
-                    '問題が連番になっていません'
-                );
-                return $this->render('FourChoiceQuiz/FourQuiz/edit.html.twig', [
-                    'form' => $form->createView(),
-                    'four_course_id' => $four_course_id,
-                ]);
             }
 
             //最後の問題を探す
@@ -156,7 +145,7 @@ class FourQuizController extends Controller {
 
         foreach ($quizzes as $quiz) {
             if ($quiz->getQuizNum() > $last_quiz_num) {
-                $last_quiz_num = $quiz->getQuizNum();
+                $last_quiz_num = $quiz->getLastQuizNum();
             }
         }
 
@@ -164,10 +153,12 @@ class FourQuizController extends Controller {
     }
 
     private function setLastQuiz(&$quizzes) {
+        dump($quizzes);
         foreach ($quizzes as $another_quiz) {
             $another_quiz->setIsLast(false);
         }
         $last_quiz = reset($quizzes);
+        dump($last_quiz);
         $last_quiz->setIsLast(true);
         foreach ($quizzes as $another_quiz) {
             if ($another_quiz->getQuizNum() >= $last_quiz->getQuizNum()) {
@@ -177,15 +168,5 @@ class FourQuizController extends Controller {
                 
             }
         }
-    }
-
-    private function checkSerialQuizNum($quizzes) {
-        foreach ($quizzes as $quiz) {
-            if ($quiz->getIsLast() && $quiz->getQuizNum() == count($quizzes)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

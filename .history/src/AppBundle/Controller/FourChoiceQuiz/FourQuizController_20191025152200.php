@@ -98,11 +98,7 @@ class FourQuizController extends Controller {
                 }
             }
 
-            if (!$this->checkSerialQuizNum($quizzes)) {
-                $this->addFlash(
-                    'error',
-                    '問題が連番になっていません'
-                );
+            if (!checkSerialQuizNum($quizzes)) {
                 return $this->render('FourChoiceQuiz/FourQuiz/edit.html.twig', [
                     'form' => $form->createView(),
                     'four_course_id' => $four_course_id,
