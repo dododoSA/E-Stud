@@ -127,6 +127,7 @@ class FourQuizController extends Controller {
                     'error',
                     '選択肢が重複しています'
                 );
+       
                 return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
                     'form' => $form->createView(),
                     'four_course_id' => $four_course_id

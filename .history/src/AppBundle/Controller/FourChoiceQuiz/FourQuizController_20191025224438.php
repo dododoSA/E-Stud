@@ -121,18 +121,6 @@ class FourQuizController extends Controller {
                 ]);
             }
 
-
-            if (!$this->isChoiceValid($quiz)) {
-                $this->addFlash(
-                    'error',
-                    '選択肢が重複しています'
-                );
-                return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
-                    'form' => $form->createView(),
-                    'four_course_id' => $four_course_id
-                ]);
-            }
-
             //最後の問題を探す
             $this->setLastQuiz($quizzes);
 

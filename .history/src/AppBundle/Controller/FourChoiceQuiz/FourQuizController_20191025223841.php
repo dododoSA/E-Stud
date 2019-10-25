@@ -42,7 +42,7 @@ class FourQuizController extends Controller {
                 $this->addFlash(
                     'error',
                     '選択肢が重複しています'
-                );
+                )
        
                 return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
                     'form' => $form->createView(),
@@ -118,18 +118,6 @@ class FourQuizController extends Controller {
                 return $this->render('FourChoiceQuiz/FourQuiz/edit.html.twig', [
                     'form' => $form->createView(),
                     'four_course_id' => $four_course_id,
-                ]);
-            }
-
-
-            if (!$this->isChoiceValid($quiz)) {
-                $this->addFlash(
-                    'error',
-                    '選択肢が重複しています'
-                );
-                return $this->render("FourChoiceQuiz/FourQuiz/new.html.twig", [
-                    'form' => $form->createView(),
-                    'four_course_id' => $four_course_id
                 ]);
             }
 
@@ -211,27 +199,5 @@ class FourQuizController extends Controller {
         }
 
         return false;
-    }
-
-    private function isChoiceValid($quiz) {
-        $choices = [$quiz->getCorrectAns()]; //全部比較しようと思ったけどなんかやだったので配列にあるかどうかで調べます
-
-        if (in_array($quiz->getWrongAns1(), $choices)) {
-            return false;
-        }
-
-        $choices[] = $quiz->getWrongAns1();
-
-        if (in_array($quiz->getWrongAns2(), $choices)) {
-            return false;
-        }
-
-        $choices[] = $quiz->getWrongAns2();
-
-        if (in_array($quiz->getWrongAns3(), $choices)) {
-            return false;
-        }
-
-        return true;
     }
 }

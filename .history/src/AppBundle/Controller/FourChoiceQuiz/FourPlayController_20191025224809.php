@@ -123,7 +123,6 @@ class FourPlayController extends Controller {
         return $this->render("FourChoiceQuiz/FourPlay/quiz.html.twig", [
             "form" => $form->createView(),
             "choice_num" => $choice_num,
-            "quiz" => $quiz
         ]);
     }
 

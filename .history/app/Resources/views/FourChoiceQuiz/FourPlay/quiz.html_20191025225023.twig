@@ -2,7 +2,6 @@
 
 {% block body %}
     <div>
-        {{ quiz.question }}
         {{ form_start(form) }}
         {% for num in choice_num %}    
             {{ form_widget(form.answer[num]) }}
