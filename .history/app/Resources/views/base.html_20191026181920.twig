@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <header class="header">
+            <ul>
+                <li><a href="{{ path('login') }}">Login</a></li>
+            
+                {% if is_granted('ROLE_USER') %}
+                    <li><a href="{{ path('login') }}">Login</a></li>
+                {% endif %}
+                
+            </ul>
+        </header>
+        {% for message in app.flashes('error') %}
+            <div>
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
