@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\User;
 
+use AppBundle\Entity\FourChoiceQuiz\FourResult;
 use AppBundle\Form\User\UserRegistrationForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,5 +38,13 @@ class UserController extends Controller {
         return $this->render('User/register.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/user", name="user_show")
+     */
+    public function showAction() {
+
+        return $this->render('User/show.html.twig');
     }
 }

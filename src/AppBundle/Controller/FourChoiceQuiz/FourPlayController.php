@@ -11,7 +11,11 @@ use AppBundle\Entity\FourChoiceQuiz\FourQuiz;
 use AppBundle\Entity\FourChoiceQuiz\FourCourse;
 use AppBundle\Entity\FourChoiceQuiz\FourResult;
 use DateTime;
-use Symfony\Component\Validator\Constraints\Date;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
+/**
+ * @Security("is_granted('ROLE_USER')")
+ */
 
 class FourPlayController extends Controller {
     /**
@@ -90,18 +94,21 @@ class FourPlayController extends Controller {
         if ($form->isSubmitted() && $form->isValid()) {
 
             $results = $session->get('four_results');
+            $user_choices = $session->get('user_choices');
             //正誤判定
+            //セッションに結果を書き込む
             $user_answer = $form['answer']->getData();
-            dump($user_answer);
+
             if ($user_answer == $quiz->getCorrectAns()) {
                 $results[$quiz_num] = 'correct';
             }
             else {
                 $results[$quiz_num] = 'wrong';
             }
+            $user_choices[$quiz_num] = $user_answer;
             $session->set('four_results', $results);
-            //セッションに結果を書き込む
-            //trigger_error;
+            $session->set('user_choices', $user_choices);
+
 
             //クイズが最後かどうかで場合分け
             if ($quiz->getIsLast()) {
@@ -154,11 +161,12 @@ class FourPlayController extends Controller {
         // //答え合わせ
         //結果を取得
         $results = $session->get('four_results');
+        $user_choices = $session->get('user_choices');
         $em = $this->getDoctrine()->getManager();
 
         foreach($results as $quiz_num => $result) {
             $four_result = new FourResult;
-            $four_result->setUserId(1);
+            $four_result->setUserId($this->getUser()->getId());
             $four_result->setDate(new DateTime());
             $quiz_id  = $this->searchQuizId($quiz_num, $quizzes);
             if ($quiz_id !== null) {
@@ -172,13 +180,15 @@ class FourPlayController extends Controller {
         $em->flush();
 
         //セッションを削除
-        $session->remove('correct_choices');
+        $session->remove('four_results');
         $session->remove('selected_four_course_id');
+        $session->remove('user_choices');
 
         return $this->render("FourChoiceQuiz/FourPlay/result.html.twig", [
             'four_course_id' => $four_course_id,
             'quizzes' => $quizzes,
             'results' => $results,
+            'user_choices' => $user_choices
         ]);
     }
 

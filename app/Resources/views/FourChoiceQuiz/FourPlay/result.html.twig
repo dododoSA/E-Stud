@@ -2,8 +2,11 @@
 
 {% block body %}
     <div>
-        {% for quiz_num,  result in results %}
-            {{ quiz_num }}. {{ result }}
+        {% for quiz in quizzes %}
+            {{ quiz.quizNum }}. {{ quiz.question }}<br />
+            {{ results[quiz.quizNum] }}<br />
+            正解:{{ quiz.correctAns }}
+            あなたの解答:{{ user_choices[quiz.quizNum] }}<br /><br />
         {% endfor %}
 
         <br />
