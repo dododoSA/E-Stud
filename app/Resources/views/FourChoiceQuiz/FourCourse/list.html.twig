@@ -1,6 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+    {{ include('default/genre_header.html.twig') }}
     <h1>大門一覧</h1>
     {% for course in courses %}
         <a href="{{ path('four_play_index', { 'four_course_id': course.id }) }}">{{ course.name }}</a>

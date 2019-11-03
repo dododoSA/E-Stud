@@ -2,6 +2,8 @@
 
 {% block body %}
 <div>
+
+    {{ include('default/genre_header.html.twig') }}
     {% for result in results %}
         {{ result.result }}<br>
     {% endfor %}

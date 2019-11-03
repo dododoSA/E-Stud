@@ -2,7 +2,9 @@
 
 {% block body %}
 <div>
-<h1>ユーザー詳細画面</h1>
-<a href="{{ path('four_result') }}">四択クイズの成績</a>
+    {{ include('default/genre_header.html.twig') }}
+    <h1>ユーザー詳細画面</h1>
+    <p>{{ app.user.username }}</p>
+    <a href="{{ path('four_result') }}">四択クイズの成績</a>
 </div>
 {% endblock %}

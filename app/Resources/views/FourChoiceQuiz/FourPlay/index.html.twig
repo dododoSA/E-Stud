@@ -2,6 +2,7 @@
 
 {% block body %}
     <div>
+        {{ include('default/genre_header.html.twig') }}
         <a href="{{ path('four_course_list') }}"><<大問一覧へ</a>
         <h2>{{ course.name }}</h2>
 
