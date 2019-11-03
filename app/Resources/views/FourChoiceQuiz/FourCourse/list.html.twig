@@ -2,13 +2,16 @@
 
 {% block body %}
     {{ include('default/genre_header.html.twig') }}
-    <h1>大門一覧</h1>
+    <h1>大問一覧</h1>
     {% for course in courses %}
         <a href="{{ path('four_play_index', { 'four_course_id': course.id }) }}">{{ course.name }}</a>
         <br />
-        <a href="{{ path('four_course_show', { 'id': course.id }) }}">詳細</a>
-        <a href="{{ path('four_course_edit', {'id': course.id }) }}">名前変更</a>
-        <a href="{{ path('four_course_delete', {'id': course.id}) }}">削除</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('four_course_show', { 'id': course.id }) }}">詳細</a>
+            <a href="{{ path('four_course_edit', {'id': course.id }) }}">名前変更</a>
+            <a href="{{ path('four_course_delete', {'id': course.id}) }}">削除</a>
+        {% endif %}
+        
         <br />
         <br />
     {% endfor %}
