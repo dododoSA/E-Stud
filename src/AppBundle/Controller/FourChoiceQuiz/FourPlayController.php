@@ -88,7 +88,6 @@ class FourPlayController extends Controller {
             ->add('next', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-        dump($form->createView());
 
         //選択を受け付けたら
         if ($form->isSubmitted() && $form->isValid()) {
@@ -168,9 +167,9 @@ class FourPlayController extends Controller {
             $four_result = new FourResult;
             $four_result->setUserId($this->getUser()->getId());
             $four_result->setDate(new DateTime());
-            $quiz_id  = $this->searchQuizId($quiz_num, $quizzes);
-            if ($quiz_id !== null) {
-                $four_result->setFourQuizId($quiz_id);//マジックナンバーをなくしたい
+            $quiz  = $this->searchQuiz($quiz_num, $quizzes);
+            if ($quiz !== null) {
+                $four_result->setFourQuiz($quiz);//マジックナンバーをなくしたい
             } 
             $four_result->setResult($result);
             $em->persist($four_result);
@@ -221,11 +220,11 @@ class FourPlayController extends Controller {
         return $choices;
     }
 
-    private function searchQuizId($quiz_num, $quizzes) {
+    private function searchQuiz($quiz_num, $quizzes) {
         //線形探索
         foreach ($quizzes as $quiz) {
             if ($quiz_num == $quiz->getQuizNum()) {
-                return $quiz->getId();
+                return $quiz;
             }
         }
         return null;

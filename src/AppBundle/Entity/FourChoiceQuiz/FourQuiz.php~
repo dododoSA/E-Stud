@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity\FourChoiceQuiz;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,12 +20,11 @@ class FourQuiz {
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotNull
      */
     private $quizNum;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=false)
      * @Assert\NotNull
      */
     private $question;
@@ -54,15 +54,24 @@ class FourQuiz {
     private $wrongAns3;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotNull
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $fourCourseId;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private $isLast;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FourResult", mappedBy="quiz")
+     */
+    private $results;
+
+    public function __construct()
+    {
+        $this->results = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -240,5 +249,29 @@ class FourQuiz {
     public function getFourCourseId()
     {
         return $this->fourCourseId;
+    }
+
+    /**
+     * Set isLast
+     *
+     * @param boolean $isLast
+     *
+     * @return FourQuiz
+     */
+    public function setIsLast($isLast)
+    {
+        $this->isLast = $isLast;
+
+        return $this;
+    }
+
+    /**
+     * Get isLast
+     *
+     * @return boolean
+     */
+    public function getIsLast()
+    {
+        return $this->isLast;
     }
 }

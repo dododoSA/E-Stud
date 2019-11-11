@@ -24,12 +24,6 @@ class FourResult {
     private $userId;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotNull
-     */
-    private $fourQuizId;
-
-    /**
      * @ORM\Column(type="string", length=10)
      * @Assert\NotNull
      */
@@ -40,4 +34,116 @@ class FourResult {
      * @Assert\NotNull
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FourQuiz", inversedBy="results")
+     * @ORM\JoinColumn(name="four_quiz_id", referencedColumnName="id")
+     */
+    private $quiz;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set userId
+     *
+     * @param integer $userId
+     *
+     * @return FourResult
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * Get userId
+     *
+     * @return integer
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * Set result
+     *
+     * @param string $result
+     *
+     * @return FourResult
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
+
+        return $this;
+    }
+
+    /**
+     * Get result
+     *
+     * @return string
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return FourResult
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set quiz
+     *
+     * @param \AppBundle\Entity\FourChoiceQuiz\FourQuiz $quiz
+     *
+     * @return FourResult
+     */
+    public function setFourQuiz(\AppBundle\Entity\FourChoiceQuiz\FourQuiz $quiz = null)
+    {
+        $this->quiz = $quiz;
+
+        return $this;
+    }
+
+    /**
+     * Get quiz
+     *
+     * @return \AppBundle\Entity\FourChoiceQuiz\FourQuiz
+     */
+    public function getFourQuiz()
+    {
+        return $this->quiz;
+    }
 }

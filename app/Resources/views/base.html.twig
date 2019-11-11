@@ -11,7 +11,7 @@
             <ul>
                 <li><a href="{{ path('homepage') }}">Home</a></li>
                 {% if is_granted('ROLE_USER') %}
-                    <li><a href="{{ path('user_show') }}">User</li>
+                    <li><a href="{{ path('user_show', {'id': app.user.id }) }}">User</li>
                     <li><a href="{{ path('logout') }}">Logout</a></li>
                 {% else %}
                     <li><a href="{{ path('login') }}">Login</a></li>

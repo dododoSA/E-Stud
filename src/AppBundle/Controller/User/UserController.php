@@ -43,10 +43,13 @@ class UserController extends Controller {
 
     /**
      * @Security("is_granted('ROLE_USER')")
-     * @Route("/user", name="user_show")
+     * @Route("/user/{id}", name="user_show")
      */
-    public function showAction() {
-
+    public function showAction($id) {
+        $user = $this->getUser();
+        if ($user->getId() != $id || in_array('ROLE_ADMIN', $user->getRoles())) {
+            $this->redirectToRoute('homepage');
+        }
         return $this->render('User/show.html.twig');
     }
 }

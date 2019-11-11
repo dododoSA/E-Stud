@@ -5,6 +5,6 @@
     {{ include('default/genre_header.html.twig') }}
     <h1>ユーザー詳細画面</h1>
     <p>{{ app.user.username }}</p>
-    <a href="{{ path('four_result') }}">四択クイズの成績</a>
+    <a href="{{ path('four_result', { 'user_id': app.user.id }) }}">四択クイズの成績</a>
 </div>
 {% endblock %}

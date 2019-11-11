@@ -24,12 +24,6 @@ class FourResult {
     private $userId;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotNull
-     */
-    private $fourQuizId;
-
-    /**
      * @ORM\Column(type="string", length=10)
      * @Assert\NotNull
      */
@@ -40,6 +34,12 @@ class FourResult {
      * @Assert\NotNull
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FourQuiz", inversedBy="results")
+     * @ORM\JoinColumn(name="four_quiz_id", referencedColumnName="id")
+     */
+    private $quiz;
 
     /**
      * Get id
@@ -73,30 +73,6 @@ class FourResult {
     public function getUserId()
     {
         return $this->userId;
-    }
-
-    /**
-     * Set fourQuizId
-     *
-     * @param integer $fourQuizId
-     *
-     * @return FourResult
-     */
-    public function setFourQuizId($fourQuizId)
-    {
-        $this->fourQuizId = $fourQuizId;
-
-        return $this;
-    }
-
-    /**
-     * Get fourQuizId
-     *
-     * @return integer
-     */
-    public function getFourQuizId()
-    {
-        return $this->fourQuizId;
     }
 
     /**
@@ -145,5 +121,53 @@ class FourResult {
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set quiz
+     *
+     * @param \AppBundle\Entity\FourChoiceQuiz\FourQuiz $quiz
+     *
+     * @return FourResult
+     */
+    public function setFourQuiz(\AppBundle\Entity\FourChoiceQuiz\FourQuiz $quiz = null)
+    {
+        $this->quiz = $quiz;
+
+        return $this;
+    }
+
+    /**
+     * Get quiz
+     *
+     * @return \AppBundle\Entity\FourChoiceQuiz\FourQuiz
+     */
+    public function getFourQuiz()
+    {
+        return $this->quiz;
+    }
+
+    /**
+     * Set quiz
+     *
+     * @param \AppBundle\Entity\FourChoiceQuiz\FourQuiz $quiz
+     *
+     * @return FourResult
+     */
+    public function setQuiz(\AppBundle\Entity\FourChoiceQuiz\FourQuiz $quiz = null)
+    {
+        $this->quiz = $quiz;
+
+        return $this;
+    }
+
+    /**
+     * Get quiz
+     *
+     * @return \AppBundle\Entity\FourChoiceQuiz\FourQuiz
+     */
+    public function getQuiz()
+    {
+        return $this->quiz;
     }
 }

@@ -5,7 +5,8 @@
 
     {{ include('default/genre_header.html.twig') }}
     {% for result in results %}
-        {{ result.result }}<br>
+        {{ result.quiz.question }}<br>
+        {{ result.result }}<br><br>
     {% endfor %}
 </div>
 {% endblock %}

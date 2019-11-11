@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity\FourChoiceQuiz;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -61,6 +62,16 @@ class FourQuiz {
      * @ORM\Column(type="boolean", nullable=false)
      */
     private $isLast;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FourResult", mappedBy="quiz")
+     */
+    private $results;
+
+    public function __construct()
+    {
+        $this->results = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -262,5 +273,39 @@ class FourQuiz {
     public function getIsLast()
     {
         return $this->isLast;
+    }
+
+    /**
+     * Add result
+     *
+     * @param \AppBundle\Entity\FourChoiceQuiz\FourResult $result
+     *
+     * @return FourQuiz
+     */
+    public function addResult(\AppBundle\Entity\FourChoiceQuiz\FourResult $result)
+    {
+        $this->results[] = $result;
+
+        return $this;
+    }
+
+    /**
+     * Remove result
+     *
+     * @param \AppBundle\Entity\FourChoiceQuiz\FourResult $result
+     */
+    public function removeResult(\AppBundle\Entity\FourChoiceQuiz\FourResult $result)
+    {
+        $this->results->removeElement($result);
+    }
+
+    /**
+     * Get results
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getResults()
+    {
+        return $this->results;
     }
 }
