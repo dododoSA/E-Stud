@@ -5,7 +5,7 @@
 
     {{ include('default/genre_header.html.twig') }}
     {% for result in results %}
-        {{ result.quiz.question }}<br>
+        <a href="{{ path('four_show', {'id': result.quiz.id}) }}">{{ result.quiz.question }}</a><br>
         {{ result.result }}<br><br>
     {% endfor %}
 </div>

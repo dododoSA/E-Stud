@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div>
+        {{ quiz.question }}<br>
+        正解: {{ quiz.correctAns }}<br>
+        誤答１: {{ quiz.wrongAns1 }}<br>
+        誤答２: {{ quiz.wrongAns2 }}<br>
+        誤答３: {{ quiz.wrongAns3 }}<br>
+    </div>
+{% endblock %}

@@ -19,6 +19,15 @@ class FourQuizController extends Controller {
     }
 
     /**
+     * @Route("/genre/four/quiz/{id}", name="four_show")
+     */
+    public function showAction(FourQuiz $quiz) {
+        return $this->render('FourChoiceQuiz/FourQuiz/show.html.twig', [
+            'quiz' => $quiz
+        ]);
+    }
+
+    /**
      * @Route("/genre/four/{four_course_id}/quiz/new", name="four_quiz_new")
      */
     public function newAction(Request $request, $four_course_id) {  //問題の新規作成
