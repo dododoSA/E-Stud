@@ -15,9 +15,17 @@ class ResultController extends Controller {
         if ($user->getId() != $user_id || in_array('ROLE_ADMIN', $user->getRoles())) {
             $this->redirectToRoute('homepage');
         }
-        $results = $this->getDoctrine()->getRepository(FourResult::class)->findByUserId($user->getId());
-        
-        dump($results[0]->getFourQuiz());
+
+        $repository = $this->getDoctrine()->getRepository(FourResult::class);
+        $query = $repository->createQueryBuilder('r')
+            ->where('r.userId = :user_id')
+            ->setParameter('user_id', $user->getId())
+            ->orderBy('r.date', 'ASC')
+            ->setMaxResults(30)//マジックナンバー
+            ->getQuery();
+
+        $results = $query->getResult();
+
         return $this->render('Result/four.html.twig',[
             'results' => $results
         ]);
